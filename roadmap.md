@@ -1,0 +1,4 @@
+- [ ] Replace template home with Avantika's responsive portfolio and working section navigation.
+- [ ] Add project, activity, achievement, contact, and education details without inventing personal claims.
+- [ ] Establish the selected Sky & Peach / Sora + Manrope design system and page metadata.
+- [ ] Verify desktop/mobile rendering, interactions, and preview build status.
