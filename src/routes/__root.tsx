@@ -108,6 +108,8 @@ function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Scripts />
+        <script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/10/13/18/20261013184610-10Y2RKFZ.js" defer></script>
       </body>
     </html>
   );
