@@ -8,3 +8,7 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Architecture
+
+- Keep the portfolio as one section-based home page with local presentation state; this is a frontend-only personal site without separate content routes or backend services.

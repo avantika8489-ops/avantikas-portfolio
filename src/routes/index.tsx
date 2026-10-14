@@ -57,7 +57,8 @@ const navigation = [
 ];
 
 const skills = [
-  { name: "HTML & CSS", Icon: Code2, group: "Web" },
+  { name: "HTML", Icon: Code2, group: "Web" },
+  { name: "CSS", Icon: Code2, group: "Web" },
   { name: "JavaScript", Icon: Workflow, group: "Web" },
   { name: "Web development", Icon: LaptopMinimal, group: "Web" },
   { name: "Python", Icon: CircuitBoard, group: "Technology" },
@@ -316,8 +317,8 @@ function Portfolio() {
                       ) : (
                         <span className="tech-pending">Project details to come</span>
                       )}
-                      <Button variant="ghost" size="icon" aria-label={`View ${title} project details`} onClick={() => setSelectedProject(index)}>
-                        <ArrowUpRight aria-hidden="true" />
+                      <Button variant="ghost" size="sm" aria-label={`View ${title} project details`} onClick={() => setSelectedProject(index)}>
+                        View project <ArrowUpRight aria-hidden="true" />
                       </Button>
                     </div>
                   </div>
