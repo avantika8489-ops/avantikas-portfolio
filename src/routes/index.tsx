@@ -1,439 +1,269 @@
-import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
-  ArrowDown,
-  ArrowDownRight,
-  ArrowRight,
-  ArrowUpRight,
-  Award,
-  BrainCircuit,
-  BriefcaseBusiness,
-  CheckCircle2,
-  CircuitBoard,
-  Code2,
-  GraduationCap,
-  LaptopMinimal,
-  Lightbulb,
-  Mail,
-  MapPin,
-  Menu,
-  Sparkles,
-  Workflow,
-  X,
+  Menu, X, Mail, Linkedin, Github, MapPin, GraduationCap, Code2, Palette, FileCode,
+  Terminal, Brain, Sparkles, Globe, Zap, ArrowRight, Award, Trophy, BookOpen, BadgeCheck,
+  Users, CalendarDays, Briefcase, HeartHandshake, Cpu, Plus,
 } from "lucide-react";
-
-import circuitStilllife from "@/assets/avantika-circuit-stilllife.jpg";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Avantika Bhaskar — B.Tech Student & Technology Enthusiast" },
-      {
-        name: "description",
-        content:
-          "Meet Avantika Bhaskar, a B.Tech student at JECRC in Jaipur interested in AI, technology, electronics, and practical digital experiences.",
-      },
-      { property: "og:title", content: "Avantika Bhaskar — B.Tech Student & Technology Enthusiast" },
-      {
-        property: "og:description",
-        content:
-          "An evolving portfolio of ideas, learning, and practical projects by Avantika Bhaskar, a B.Tech student at JECRC in Jaipur.",
-      },
+      { title: "Avantika Bhaskar — B.Tech Student & AI Enthusiast" },
+      { name: "description", content: "Portfolio of Avantika Bhaskar, a B.Tech student at JECRC, Jaipur, exploring AI, web development and electronics." },
+      { property: "og:title", content: "Avantika Bhaskar — Portfolio" },
+      { property: "og:description", content: "B.Tech student at JECRC exploring AI, web development and electronics." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Portfolio,
+  component: Index,
 });
 
-const navigation = [
-  { href: "#about", label: "About" },
-  { href: "#education", label: "Education" },
-  { href: "#skills", label: "Skills" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
-  { href: "#achievements", label: "Achievements" },
+const EMAIL = "avy@17gmail.com";
+const LINKEDIN = "#"; // TODO: add LinkedIn URL
+const GITHUB = "#"; // TODO: add GitHub URL
+
+const nav = [
+  ["About", "about"], ["Education", "education"], ["Skills", "skills"], ["Projects", "projects"],
+  ["Experience", "experience"], ["Achievements", "achievements"], ["Contact", "contact"],
 ];
 
 const skills = [
-  { name: "HTML", Icon: Code2, group: "Web" },
-  { name: "CSS", Icon: Code2, group: "Web" },
-  { name: "JavaScript", Icon: Workflow, group: "Web" },
-  { name: "Web development", Icon: LaptopMinimal, group: "Web" },
-  { name: "Python", Icon: CircuitBoard, group: "Technology" },
-  { name: "Artificial intelligence", Icon: BrainCircuit, group: "Technology" },
-  { name: "Generative AI", Icon: Sparkles, group: "Technology" },
-  { name: "Digital productivity", Icon: Lightbulb, group: "Practice" },
+  { name: "HTML", icon: FileCode, tone: "bg-sky" },
+  { name: "CSS", icon: Palette, tone: "bg-lavender" },
+  { name: "JavaScript", icon: Code2, tone: "bg-cream" },
+  { name: "Python", icon: Terminal, tone: "bg-sky" },
+  { name: "Artificial Intelligence", icon: Brain, tone: "bg-lavender" },
+  { name: "Generative AI", icon: Sparkles, tone: "bg-cream" },
+  { name: "Web Development", icon: Globe, tone: "bg-sky" },
+  { name: "Digital Productivity", icon: Zap, tone: "bg-lavender" },
 ];
 
 const projects = [
-  {
-    number: "01",
-    title: "Personal portfolio",
-    subtitle: "A personal space for ideas, learning, and work.",
-    description:
-      "This portfolio brings my interests and selected work together in one welcoming place. It is designed to grow alongside the things I learn and make.",
-    stack: ["React", "TanStack Start", "Tailwind CSS"],
-    Icon: LaptopMinimal,
-    className: "project-art--portfolio",
-    status: "This portfolio",
-  },
-  {
-    number: "02",
-    title: "AI website project",
-    subtitle: "A project space for practical, human-centred AI.",
-    description:
-      "An AI-focused website idea exploring how thoughtful technology could make an everyday digital experience more useful. Project details and a live link can be added when ready.",
-    stack: null,
-    Icon: BrainCircuit,
-    className: "project-art--ai",
-    status: "Details to come",
-  },
-  {
-    number: "03",
-    title: "Student productivity project",
-    subtitle: "Small, useful ideas for student life.",
-    description:
-      "A student-focused concept centred on making it easier to organize study, tasks, and everyday learning. Project details and a live link can be added when ready.",
-    stack: null,
-    Icon: Lightbulb,
-    className: "project-art--study",
-    status: "Details to come",
-  },
+  { title: "Personal Portfolio Website", desc: "A responsive, accessible portfolio to showcase my learning journey, skills and projects.", tech: ["React", "Tailwind CSS", "Vite"] },
+  { title: "AI Website Project", desc: "A web experience that explores how AI tools can make everyday information easier to use.", tech: ["JavaScript", "Generative AI", "HTML/CSS"] },
+  { title: "Student Productivity Project", desc: "A simple tool to help students organise tasks, plan study time and stay focused.", tech: ["Python", "Productivity", "Web"] },
 ];
 
-const milestoneGroups = [
-  { category: "Certifications", Icon: Award },
-  { category: "Hackathons", Icon: Sparkles },
-  { category: "Courses", Icon: GraduationCap },
-  { category: "Awards & more", Icon: CheckCircle2 },
+const experience = [
+  { icon: HeartHandshake, title: "Volunteering" },
+  { icon: Users, title: "Student Activities" },
+  { icon: CalendarDays, title: "Events" },
+  { icon: Briefcase, title: "Responsibilities & Internships" },
 ];
 
-function Portfolio() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
-  const selected = selectedProject === null ? null : projects[selectedProject];
+const achievements = [
+  { icon: BadgeCheck, title: "Certifications" },
+  { icon: Trophy, title: "Hackathons" },
+  { icon: BookOpen, title: "Courses" },
+  { icon: Award, title: "Awards" },
+  { icon: Sparkles, title: "Other Achievements" },
+];
 
-  useEffect(() => {
-    if (!selected) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedProject(null);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selected]);
-
+function Section({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="portfolio-page">
-      <a href="#main-content" className="skip-link">
-        Skip to content
-      </a>
+    <section id={id} className="mx-auto max-w-6xl px-5 py-20 sm:py-24">
+      <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">{eyebrow}</p>
+      <h2 className="mt-2 text-3xl sm:text-4xl font-semibold">{title}</h2>
+      <div className="mt-10">{children}</div>
+    </section>
+  );
+}
 
-      <header className="site-header">
-        <div className="site-header__inner">
-          <a className="wordmark" href="#home" aria-label="Avantika Bhaskar, home">
-            <span className="wordmark__initial">A</span>
-            <span>Avantika Bhaskar</span>
-          </a>
+function Placeholder({ icon: Icon, title }: { icon: typeof Award; title: string }) {
+  return (
+    <div className="card-soft p-6">
+      <div className="flex items-center gap-3">
+        <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent text-accent-foreground"><Icon className="h-5 w-5" /></span>
+        <h3 className="text-lg font-semibold">{title}</h3>
+      </div>
+      <div className="mt-5 rounded-xl border border-dashed border-border bg-muted/60 p-4 text-sm text-muted-foreground">
+        <p className="flex items-center gap-2"><Plus className="h-4 w-4" /> Details coming soon</p>
+        <p className="mt-1 text-xs">Title · Organisation · Date</p>
+      </div>
+    </div>
+  );
+}
 
-          <nav className="desktop-nav" aria-label="Main navigation">
-            {navigation.map((item) => (
-              <a key={item.href} href={item.href}>
-                {item.label}
-              </a>
+function Index() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">
+          <a href="#home" className="font-display text-xl font-semibold">Avantika<span className="text-primary">.</span></a>
+          <nav className="hidden lg:flex gap-1">
+            {nav.map(([l, id]) => (
+              <a key={id} href={`#${id}`} className="rounded-full px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground">{l}</a>
             ))}
           </nav>
-
-          <Button asChild size="sm" className="header-contact">
-            <a href="#contact">
-              Let’s talk <ArrowUpRight aria-hidden="true" />
-            </a>
-          </Button>
-
-          <Button
-            type="button"
-            variant="outline"
-            size="icon"
-            className="menu-toggle"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-            onClick={() => setMenuOpen((open) => !open)}
-          >
-            {menuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          </Button>
+          <button aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)} className="lg:hidden rounded-lg p-2 hover:bg-accent">
+            {open ? <X /> : <Menu />}
+          </button>
         </div>
-        {menuOpen && (
-          <nav id="mobile-navigation" className="mobile-nav" aria-label="Mobile navigation">
-            {navigation.map((item) => (
-              <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-                {item.label} <ArrowUpRight aria-hidden="true" />
-              </a>
+        {open && (
+          <nav className="lg:hidden border-t border-border bg-background px-5 py-3 flex flex-col">
+            {nav.map(([l, id]) => (
+              <a key={id} href={`#${id}`} onClick={() => setOpen(false)} className="rounded-lg px-3 py-3 hover:bg-accent">{l}</a>
             ))}
-            <a href="#contact" onClick={() => setMenuOpen(false)}>
-              Contact <ArrowUpRight aria-hidden="true" />
-            </a>
           </nav>
         )}
       </header>
 
-      <main id="main-content">
-        <section id="home" className="hero-section section-anchor">
-          <div className="page-container hero-layout">
-            <div className="hero-copy">
-              <p className="eyebrow"><span className="eyebrow__dot" /> A little curious. A lot to explore.</p>
-              <h1>
-                Hello, I’m
-                <span>Avantika<span className="hero-period">.</span></span>
+      <main>
+        {/* Hero */}
+        <section id="home" className="relative overflow-hidden circuit-bg">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 py-20 sm:py-28 md:grid-cols-[1.3fr_1fr]">
+            <div className="fade-up">
+              <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-sm font-medium text-secondary-foreground">
+                <MapPin className="h-4 w-4" /> Jaipur, India · JECRC
+              </span>
+              <h1 className="mt-6 text-5xl sm:text-7xl font-semibold leading-[1.05]">
+                Hi, I'm <em className="text-primary">Avantika</em>
               </h1>
-              <p className="hero-role">B.Tech Student <span>·</span> AI &amp; Technology Enthusiast</p>
-              <p className="hero-intro">
-                I’m a student at JECRC, learning how technology can turn thoughtful ideas into useful things for everyday life.
+              <p className="mt-4 text-lg sm:text-xl font-medium text-secondary-foreground">B.Tech Student | AI &amp; Technology Enthusiast</p>
+              <p className="mt-5 max-w-xl text-muted-foreground leading-relaxed">
+                I love exploring how technology, artificial intelligence and electronics can solve real-life problems — and I'm building practical projects along the way.
               </p>
-              <div className="hero-actions">
-                <Button asChild size="lg">
-                  <a href="#projects">Explore my projects <ArrowRight aria-hidden="true" /></a>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <a href="#contact">Get in touch <ArrowUpRight aria-hidden="true" /></a>
-                </Button>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a href="#projects" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-[var(--shadow-soft)] transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]">
+                  View Projects <ArrowRight className="h-4 w-4" />
+                </a>
+                <a href="#contact" className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-6 py-3 font-semibold transition hover:bg-accent">
+                  Contact Me
+                </a>
               </div>
-              <div className="hero-location"><MapPin aria-hidden="true" /> Jaipur, India <span className="location-divider">/</span> JECRC</div>
             </div>
-
-            <figure className="hero-figure">
-              <div className="hero-photo-wrap">
-                <img
-                  className="hero-photo"
-                  src={circuitStilllife}
-                  alt="A small microcontroller and electronic components on a pale blue surface."
-                  width={1024}
-                  height={1024}
-                  fetchPriority="high"
-                />
-                <div className="photo-index" aria-hidden="true">FIG. 01 <span>—</span> LEARN BY MAKING</div>
+            <div className="relative mx-auto w-full max-w-sm floaty" aria-hidden>
+              <div className="aspect-square rounded-[2.5rem] bg-gradient-to-br from-sky via-cream to-lavender p-8 shadow-[var(--shadow-lift)]">
+                <svg viewBox="0 0 200 200" className="h-full w-full text-primary">
+                  <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity=".7">
+                    <path d="M100 20v40M100 140v40M20 100h40M140 100h40M45 45l28 28M155 45l-28 28M45 155l28-28M155 155l-28-28" />
+                  </g>
+                  <g fill="currentColor">
+                    {[[100,20],[100,180],[20,100],[180,100],[45,45],[155,45],[45,155],[155,155]].map(([x,y]) => <circle key={`${x}-${y}`} cx={x} cy={y} r="5" />)}
+                  </g>
+                  <rect x="62" y="62" width="76" height="76" rx="16" className="fill-card" stroke="currentColor" strokeWidth="2.5" />
+                  <text x="100" y="110" textAnchor="middle" className="fill-primary" style={{ font: "600 26px Fraunces, serif" }}>AI</text>
+                </svg>
               </div>
-              <figcaption className="hero-caption">
-                <span>A curiosity for how things work.</span>
-                <span className="hero-caption__sparkle"><Sparkles aria-hidden="true" /> <span>Always learning</span></span>
-              </figcaption>
-              <span className="figure-note" aria-hidden="true">Ideas in progress <ArrowDownRight /></span>
-            </figure>
-          </div>
-          <a className="scroll-cue" href="#about"><span>Get to know me</span><ArrowDown aria-hidden="true" /></a>
-        </section>
-
-        <div className="profile-strip" aria-label="A few details">
-          <div className="profile-strip__inner page-container">
-            <span><span className="strip-dot strip-dot--blue" /> B.Tech at JECRC</span>
-            <span><span className="strip-dot strip-dot--peach" /> Based in Jaipur, India</span>
-            <span><span className="strip-dot strip-dot--lavender" /> Interested in people-first technology</span>
-          </div>
-        </div>
-
-        <section id="about" className="content-section section-anchor">
-          <div className="page-container about-layout">
-            <div className="section-heading">
-              <p className="eyebrow">01 <span className="eyebrow__line" /> A little about me</p>
-              <h2>Curiosity is where <span>it starts.</span></h2>
-            </div>
-            <div className="about-copy">
-              <p className="about-lead">I’m a B.Tech student with a curious mind and a soft spot for technology that solves real problems.</p>
-              <p>From artificial intelligence and web development to electronics and digital productivity, I enjoy exploring how things work—and what they could make possible. I’m learning by building practical ideas, one step at a time.</p>
-              <a className="text-link" href="#projects">A few things I’m exploring <ArrowDownRight aria-hidden="true" /></a>
+              <Cpu className="absolute -left-4 -bottom-4 h-14 w-14 rounded-2xl bg-card p-3 text-primary shadow-[var(--shadow-soft)]" />
             </div>
           </div>
         </section>
 
-        <section id="education" className="education-band section-anchor">
-          <div className="page-container education-layout">
-            <div>
-              <p className="eyebrow">02 <span className="eyebrow__line" /> The learning chapter</p>
-              <h2>Building a foundation<br />for what’s next.</h2>
+        <Section id="about" eyebrow="About Me" title="Curious mind, practical builder">
+          <div className="grid gap-6 md:grid-cols-[1.5fr_1fr]">
+            <div className="card-soft p-7 text-muted-foreground leading-relaxed space-y-4">
+              <p>I'm a dedicated B.Tech student interested in technology, artificial intelligence, web development and digital productivity. I'm actively learning modern technologies and turning ideas into practical projects.</p>
+              <p>My curiosity extends to electronics and how hardware and software meet. I enjoy learning by doing — experimenting, asking questions and solving real-life problems one small project at a time.</p>
             </div>
-            <div className="education-entry">
-              <div className="education-entry__icon"><GraduationCap aria-hidden="true" /></div>
-              <div className="education-entry__main">
-                <p className="education-entry__degree">Bachelor of Technology <span>·</span> B.Tech</p>
-                <p className="education-entry__school">JECRC <span>·</span> Jaipur, India</p>
-                <p className="education-entry__focus">Learning interests: artificial intelligence, electronics, web development &amp; practical problem-solving.</p>
-              </div>
-              <span className="education-year">2026</span>
-            </div>
-          </div>
-        </section>
-
-        <section id="skills" className="content-section skills-section section-anchor">
-          <div className="page-container">
-            <div className="section-heading section-heading--row">
-              <div>
-                <p className="eyebrow">03 <span className="eyebrow__line" /> Things I’m learning</p>
-                <h2>Tools &amp; <span>interests.</span></h2>
-              </div>
-              <p className="section-aside">A growing toolkit—shaped by curiosity, practice, and the next thing to try.</p>
-            </div>
-            <div className="skills-grid">
-              {skills.map(({ name, Icon, group }, index) => (
-                <div className="skill-item" key={name}>
-                  <div className={`skill-icon skill-icon--${index % 3}`}><Icon aria-hidden="true" /></div>
-                  <div><p className="skill-name">{name}</p><p className="skill-group">{group}</p></div>
-                  <ArrowUpRight className="skill-arrow" aria-hidden="true" />
+            <div className="grid grid-cols-2 gap-4">
+              {[["AI", "Exploring"], ["Web", "Building"], ["Electronics", "Tinkering"], ["Always", "Learning"]].map(([a, b]) => (
+                <div key={a} className="card-soft p-5 text-center">
+                  <p className="font-display text-xl font-semibold text-primary">{a}</p>
+                  <p className="text-sm text-muted-foreground">{b}</p>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </Section>
 
-        <section id="projects" className="projects-section section-anchor">
-          <div className="page-container">
-            <div className="section-heading section-heading--row">
-              <div>
-                <p className="eyebrow">04 <span className="eyebrow__line" /> Selected ideas</p>
-                <h2>A few things on <span>my mind.</span></h2>
+        <Section id="education" eyebrow="Education" title="Where I'm learning">
+          <div className="card-soft p-7 flex flex-col sm:flex-row gap-6">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-sky text-secondary-foreground"><GraduationCap className="h-7 w-7" /></span>
+            <div className="flex-1">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h3 className="text-2xl font-semibold">Bachelor of Technology (B.Tech)</h3>
+                <span className="rounded-full bg-accent px-3 py-1 text-sm font-medium text-accent-foreground">2026</span>
               </div>
-              <p className="section-aside">Small steps, useful questions, and plenty of room to keep growing.</p>
-            </div>
-            <div className="projects-grid">
-              {projects.map(({ number, title, subtitle, stack, Icon, className, status }, index) => (
-                <article className="project-card" id={`project-${number}`} key={number}>
-                  <div className={`project-art ${className}`}>
-                    <span className="project-art__number">PROJECT {number}</span>
-                    <div className="project-art__symbol"><Icon aria-hidden="true" /></div>
-                    <span className="project-art__word" aria-hidden="true">{index === 0 ? "make" : index === 1 ? "imagine" : "organise"}</span>
-                    <span className="project-status"><span />{status}</span>
-                  </div>
-                  <div className="project-card__body">
-                    <div className="project-title-line"><span className="project-number">{number} /</span><span className="project-category">{index === 0 ? "Personal site" : index === 1 ? "AI & web" : "Student life"}</span></div>
-                    <h3>{title}</h3>
-                    <p className="project-subtitle">{subtitle}</p>
-                    <div className="project-card__footer">
-                      {stack ? (
-                        <div className="tech-list" aria-label="Technologies used">
-                          {stack.map((tech) => <span key={tech}>{tech}</span>)}
-                        </div>
-                      ) : (
-                        <span className="tech-pending">Project details to come</span>
-                      )}
-                      <Button variant="ghost" size="sm" aria-label={`View ${title} project details`} onClick={() => setSelectedProject(index)}>
-                        View project <ArrowUpRight aria-hidden="true" />
-                      </Button>
-                    </div>
-                  </div>
-                </article>
-              ))}
+              <p className="mt-1 text-muted-foreground">JECRC, Jaipur</p>
+              <p className="mt-5 text-sm font-semibold">Relevant learning areas</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {["Programming", "Artificial Intelligence", "Web Technologies", "Electronics", "+ Add more"].map((t) => (
+                  <span key={t} className="rounded-full border border-border bg-muted px-3 py-1 text-sm text-muted-foreground">{t}</span>
+                ))}
+              </div>
             </div>
           </div>
-        </section>
+        </Section>
 
-        <section id="experience" className="experience-section section-anchor">
-          <div className="page-container experience-layout">
-            <div className="experience-intro">
-              <p className="eyebrow">05 <span className="eyebrow__line" /> The things in between</p>
-              <h2>Experience &amp; <span>activities.</span></h2>
-              <p>A space for the people, projects, events, and moments that make learning a little more hands-on.</p>
-            </div>
-            <div className="experience-placeholder">
-              <div className="experience-placeholder__mark"><BriefcaseBusiness aria-hidden="true" /></div>
-              <div>
-                <p className="experience-placeholder__title">The next chapter is unwritten.</p>
-                <p>Volunteering, student activities, events, responsibilities, and future internships.</p>
+        <Section id="skills" eyebrow="Skills" title="What I work with">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {skills.map(({ name, icon: Icon, tone }) => (
+              <div key={name} className="card-soft p-5">
+                <span className={`grid h-12 w-12 place-items-center rounded-xl ${tone} text-primary`}><Icon className="h-6 w-6" /></span>
+                <p className="mt-4 font-semibold">{name}</p>
               </div>
-              <span className="placeholder-status">To be continued <ArrowRight aria-hidden="true" /></span>
-            </div>
+            ))}
           </div>
-        </section>
+        </Section>
 
-        <section id="achievements" className="content-section achievement-section section-anchor">
-          <div className="page-container">
-            <div className="section-heading section-heading--row">
-              <div>
-                <p className="eyebrow">06 <span className="eyebrow__line" /> Milestones, big &amp; small</p>
-                <h2>Things worth <span>celebrating.</span></h2>
-              </div>
-              <p className="section-aside">A place to collect the milestones still ahead.</p>
-            </div>
-            <div className="milestone-grid">
-              {milestoneGroups.map(({ category, Icon }, index) => (
-                <div className="milestone-item" key={category}>
-                  <div className={`milestone-icon milestone-icon--${index}`}><Icon aria-hidden="true" /></div>
-                  <div><h3>{category}</h3><p>More to share soon</p></div>
-                  <span className="milestone-plus" aria-hidden="true">+</span>
+        <Section id="projects" eyebrow="Projects" title="Things I'm building">
+          <div className="grid gap-6 md:grid-cols-3">
+            {projects.map((p, i) => (
+              <article key={p.title} className="card-soft flex flex-col overflow-hidden">
+                <div className={`h-32 circuit-bg ${["bg-sky", "bg-lavender", "bg-cream"][i]}`} />
+                <div className="flex flex-1 flex-col p-6">
+                  <h3 className="text-xl font-semibold">{p.title}</h3>
+                  <p className="mt-2 flex-1 text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {p.tech.map((t) => <span key={t} className="rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">{t}</span>)}
+                  </div>
+                  <a href="#" className="mt-6 inline-flex items-center gap-2 self-start rounded-full border border-border px-4 py-2 text-sm font-semibold transition hover:bg-primary hover:text-primary-foreground">
+                    View Project <ArrowRight className="h-4 w-4" />
+                  </a>
                 </div>
+              </article>
+            ))}
+          </div>
+        </Section>
+
+        <Section id="experience" eyebrow="Experience & Activities" title="Beyond the classroom">
+          <div className="grid gap-5 sm:grid-cols-2">
+            {experience.map((e) => <Placeholder key={e.title} {...e} />)}
+          </div>
+        </Section>
+
+        <Section id="achievements" eyebrow="Achievements" title="Milestones along the way">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {achievements.map((a) => <Placeholder key={a.title} {...a} />)}
+          </div>
+        </Section>
+
+        <Section id="contact" eyebrow="Contact" title="Let's connect">
+          <div className="card-soft p-8 sm:p-10 bg-gradient-to-br from-card to-accent/40">
+            <p className="max-w-xl text-muted-foreground">Open to internships, collaborations and conversations about tech and AI. Feel free to reach out!</p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {[
+                { icon: Mail, label: "Email", value: EMAIL, href: `mailto:${EMAIL}` },
+                { icon: Linkedin, label: "LinkedIn", value: "Add your profile", href: LINKEDIN },
+                { icon: Github, label: "GitHub", value: "Add your profile", href: GITHUB },
+              ].map(({ icon: Icon, label, value, href }) => (
+                <a key={label} href={href} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4 transition hover:-translate-y-0.5 hover:shadow-[var(--shadow-soft)]">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-secondary text-primary"><Icon className="h-5 w-5" /></span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-semibold">{label}</span>
+                    <span className="block truncate text-sm text-muted-foreground">{value}</span>
+                  </span>
+                </a>
               ))}
             </div>
           </div>
-        </section>
-
-        <section id="contact" className="contact-section section-anchor">
-          <div className="contact-ornament" aria-hidden="true"><CircuitBoard /></div>
-          <div className="page-container contact-layout">
-            <div className="contact-copy">
-              <p className="eyebrow">07 <span className="eyebrow__line" /> Say hello</p>
-              <h2>Good things<br />start with <span>a conversation.</span></h2>
-              <p>Have an idea, an opportunity, or a useful resource to share? I’d be happy to hear from you.</p>
-              <Button asChild size="lg" className="contact-cta">
-                <a href="mailto:avy@17gmail.com">Write me a note <ArrowUpRight aria-hidden="true" /></a>
-              </Button>
-            </div>
-            <div className="contact-details">
-              <a className="contact-line" href="mailto:avy@17gmail.com">
-                <span className="contact-line__icon"><Mail aria-hidden="true" /></span>
-                <span><span className="contact-line__label">Email</span><span className="contact-line__value">avy@17gmail.com</span></span>
-                <ArrowUpRight aria-hidden="true" />
-              </a>
-              <div className="contact-line contact-line--pending">
-                <span className="contact-line__icon"><span className="social-letter">in</span></span>
-                <span><span className="contact-line__label">LinkedIn</span><span className="contact-line__value">Profile link to be added</span></span>
-                <span className="pending-dash" aria-label="Link not provided">—</span>
-              </div>
-              <div className="contact-line contact-line--pending">
-                <span className="contact-line__icon"><span className="social-letter social-letter--github">GH</span></span>
-                <span><span className="contact-line__label">GitHub</span><span className="contact-line__value">Profile link to be added</span></span>
-                <span className="pending-dash" aria-label="Link not provided">—</span>
-              </div>
-            </div>
-          </div>
-        </section>
+        </Section>
       </main>
 
-      <footer className="site-footer">
-        <div className="page-container site-footer__inner">
-          <a className="wordmark wordmark--footer" href="#home"><span className="wordmark__initial">A</span><span>Avantika Bhaskar</span></a>
-          <p>Made with curiosity <span aria-hidden="true">·</span> Jaipur, India</p>
-          <a className="back-to-top" href="#home">Back to top <ArrowUpRight aria-hidden="true" /></a>
+      <footer className="border-t border-border bg-muted/50">
+        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-8 text-sm text-muted-foreground sm:flex-row">
+          <p>© {new Date().getFullYear()} Avantika Bhaskar · Jaipur, India</p>
+          <div className="flex gap-2">
+            <a aria-label="Email" href={`mailto:${EMAIL}`} className="rounded-full p-2 hover:bg-accent"><Mail className="h-4 w-4" /></a>
+            <a aria-label="LinkedIn" href={LINKEDIN} className="rounded-full p-2 hover:bg-accent"><Linkedin className="h-4 w-4" /></a>
+            <a aria-label="GitHub" href={GITHUB} className="rounded-full p-2 hover:bg-accent"><Github className="h-4 w-4" /></a>
+          </div>
         </div>
       </footer>
-
-      {selected && (
-        <div className="project-modal-backdrop" onMouseDown={(event) => {
-          if (event.target === event.currentTarget) setSelectedProject(null);
-        }}>
-          <section className="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-dialog-title">
-            <div className="project-modal__topline"><span>PROJECT {selected.number} <span>—</span> {selected.status}</span>
-              <Button type="button" variant="outline" size="icon" aria-label="Close project details" onClick={() => setSelectedProject(null)}><X aria-hidden="true" /></Button>
-            </div>
-            <p className="eyebrow"><span className="eyebrow__dot" /> A closer look</p>
-            <h2 id="project-dialog-title">{selected.title}</h2>
-            <p className="project-modal__description">{selected.description}</p>
-            <div className="project-modal__details">
-              <span>TOOLS &amp; TECHNOLOGIES</span>
-              {selected.stack ? (
-                <div className="tech-list">{selected.stack.map((tech) => <span key={tech}>{tech}</span>)}</div>
-              ) : (
-                <p>Details to be added as the project takes shape.</p>
-              )}
-            </div>
-            <Button asChild variant="outline">
-              <a href="mailto:avy@17gmail.com?subject=I%20would%20love%20to%20hear%20about%20your%20project" onClick={() => setSelectedProject(null)}>
-                Ask me about this project <ArrowUpRight aria-hidden="true" />
-              </a>
-            </Button>
-          </section>
-        </div>
-      )}
     </div>
   );
 }
